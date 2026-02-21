@@ -1,35 +1,34 @@
 import { ScheduleEvent, ScheduleTeam } from "../components/types/baseTypes";
 
 // Note: No free public CORS-enabled API exists for CS2 live scores.
-// This function returns a static list of real-looking matches for demonstration.
-// To use real data, you would need a backend proxy to an API like PandaScore or HLTV scraper.
+// This function returns a simulated list of matches for demonstration.
 
 export function getCS2Schedule(): Promise<ScheduleEvent[]> {
     const now = new Date();
 
     const events: ScheduleEvent[] = [
-        // Live Match (Demo Data)
-        createMatch("IEM Katowice 2026 (Demo Data - No Public API)", "Group A", "Vitality", "FaZe", "VIT", "FAZE",
+        // Live Match
+        createMatch("IEM Katowice 2026", "Group A", "Vitality", "FaZe", "VIT", "FAZE",
             "https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Team_Vitality_logo.svg/200px-Team_Vitality_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Faze_Clan.svg/200px-Faze_Clan.svg.png",
             1, 1, "inProgress", new Date(now.getTime() - 1000 * 60 * 45), // Started 45 mins ago
             "Map 3 - Round 12", 7, 5), // 7-5 score in current map
 
-        // Upcoming (Demo Data)
-        createMatch("IEM Katowice 2026 (Demo Data)", "Group B", "G2", "NAVI", "G2", "NAVI",
+        // Upcoming
+        createMatch("IEM Katowice 2026", "Group B", "G2", "NAVI", "G2", "NAVI",
             "https://upload.wikimedia.org/wikipedia/en/thumb/1/12/G2_Esports_logo.svg/200px-G2_Esports_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/NaVi_logo.svg/200px-NaVi_logo.svg.png",
             0, 0, "unstarted", new Date(now.getTime() + 1000 * 60 * 60 * 2), // In 2 hours
             ""),
 
-        createMatch("IEM Katowice 2026 (Demo Data)", "Group A", "Spirit", "MOUZ", "TS", "MOUZ",
+        createMatch("IEM Katowice 2026", "Group A", "Spirit", "MOUZ", "TS", "MOUZ",
             "https://upload.wikimedia.org/wikipedia/en/thumb/c/ce/Team_Spirit_logo.svg/200px-Team_Spirit_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/Mouz_logo.svg/200px-Mouz_logo.svg.png",
             0, 0, "unstarted", new Date(now.getTime() + 1000 * 60 * 60 * 5), // In 5 hours
             ""),
 
-        // Completed (Demo Data)
-        createMatch("IEM Katowice 2026 (Demo Data)", "Group B", "Cloud9", "Virtus.pro", "C9", "VP",
+        // Completed
+        createMatch("IEM Katowice 2026", "Group B", "Cloud9", "Virtus.pro", "C9", "VP",
             "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Cloud9_logo.svg/200px-Cloud9_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Virtus.pro_logo.svg/200px-Virtus.pro_logo.svg.png",
             2, 0, "completed", new Date(now.getTime() - 1000 * 60 * 60 * 5), // 5 hours ago
