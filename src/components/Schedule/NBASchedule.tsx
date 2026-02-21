@@ -1,14 +1,22 @@
 import './styles/scheduleStyle.css'
 import { EventCard } from "./EventCard";
 import { ScheduleEvent } from "../types/baseTypes";
-import { mockNBASchedule } from "../../utils/MockData";
+import { getNBASchedule } from "../../utils/NBAAPI";
+import { useEffect, useState } from "react";
 
 export function NBASchedule() {
 
-    const liveEvents = mockNBASchedule.filter(e => e.state === "inProgress");
-    const upcomingEvents = mockNBASchedule.filter(e => e.state === "unstarted");
-    const recentEvents = mockNBASchedule.filter(e => e.state === "completed");
+    const [liveEvents, setLiveEvents] = useState<ScheduleEvent[]>([])
+    const [upcomingEvents, setUpcomingEvents] = useState<ScheduleEvent[]>([])
+    const [recentEvents, setRecentEvents] = useState<ScheduleEvent[]>([])
 
+    useEffect(() => {
+        getNBASchedule().then(events => {
+            setLiveEvents(events.filter(e => e.state === "inProgress"))
+            setUpcomingEvents(events.filter(e => e.state === "unstarted"))
+            setRecentEvents(events.filter(e => e.state === "completed"))
+        })
+    }, [])
 
     let scheduledEvents = [
         {

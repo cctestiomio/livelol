@@ -25,6 +25,9 @@ import { StreamToggler } from '../Navbar/StreamToggler';
 import { DisabledGame } from './DisabledGame';
 import { SimpleMatch } from './SimpleMatch';
 
+import { getNBASchedule } from "../../utils/NBAAPI";
+import { getValorantSchedule } from "../../utils/ValorantAPI";
+import { getCS2Schedule } from "../../utils/CS2API";
 
 export function Match({ match }: any) {
     const [eventDetails, setEventDetails] = useState<EventDetails>();
@@ -47,7 +50,7 @@ export function Match({ match }: any) {
     const streamEnabled = streamData ? streamData === `unmute` : false
 
     const matchId = match.params.gameid;
-    const isMockMatch = matchId.startsWith('val-') || matchId.startsWith('nba-');
+    const isMockMatch = matchId.startsWith('val-') || matchId.startsWith('nba-') || matchId.startsWith('cs2-');
     let matchEventDetails = eventDetails
     let currentGameIndex = 1
     let lastFrameSuccess = false
@@ -75,18 +78,62 @@ export function Match({ match }: any) {
         }
 
         function getEventDetails(gameIndex: number) {
+            if (isMockMatch) {
+                let fetchPromise;
+                if (matchId.startsWith('nba-')) fetchPromise = getNBASchedule();
+                else if (matchId.startsWith('val-')) fetchPromise = getValorantSchedule();
+                else if (matchId.startsWith('cs2-')) fetchPromise = getCS2Schedule();
+
+                if (fetchPromise) {
+                    fetchPromise.then((events: any[]) => {
+                         const event = events.find((e: any) => e.match.id === matchId);
+                         if (event) {
+                             const details: EventDetails = {
+                                 id: event.match.id,
+                                 league: { id: event.league.slug, slug: event.league.slug, name: event.league.name, image: "" },
+                                 match: {
+                                     strategy: event.match.strategy,
+                                     teams: event.match.teams.map((t: any) => ({
+                                         id: t.code,
+                                         code: t.code,
+                                         name: t.name,
+                                         image: t.image,
+                                         result: t.result
+                                     })),
+                                     games: []
+                                 },
+                                 tournament: { id: "unknown" },
+                                 type: "match"
+                             };
+                             setEventDetails(details);
+                             setScheduleEvent(event);
+                             matchEventDetails = details;
+
+                             const frame: WindowFrame = {
+                                 gameState: event.state === "completed" ? "finished" : "in_game",
+                                 rfc460Timestamp: new Date().toISOString(),
+                                 blueTeam: { totalKills: event.match.teams[0].score || 0, totalGold: 0, inhibitors: 0, towers: 0, barons: 0, dragons: [], participants: [] },
+                                 redTeam: { totalKills: event.match.teams[1].score || 0, totalGold: 0, inhibitors: 0, towers: 0, barons: 0, dragons: [], participants: [] }
+                             };
+                             setLastWindowFrame(frame);
+                         }
+                    });
+                    return;
+                }
+            }
+
             getEventDetailsResponse(matchId).then(response => {
                 let eventDetails: EventDetails = response.data.data.event;
                 if (eventDetails === undefined) return undefined;
                 let newGameIndex = getGameIndex(eventDetails)
-                let gameId = eventDetails.match.games[newGameIndex - 1].id
+                let gameId = eventDetails.match.games[newGameIndex - 1] ? eventDetails.match.games[newGameIndex - 1].id : "unknown"
                 console.log(`Current Game ID: ${gameId}`)
                 console.groupCollapsed(`Event Details`)
                 console.log(eventDetails)
                 console.groupEnd()
                 setEventDetails(eventDetails)
                 setGameIndex(gameIndex)
-                getFirstWindow(gameId)
+                if (gameId !== "unknown") getFirstWindow(gameId)
                 getScheduleEvent(eventDetails)
                 getResults(eventDetails)
                 matchEventDetails = eventDetails

@@ -1,61 +1,22 @@
 import './styles/scheduleStyle.css'
 import { EventCard } from "./EventCard";
 import { ScheduleEvent } from "../types/baseTypes";
+import { getCS2Schedule } from "../../utils/CS2API";
+import { useEffect, useState } from "react";
 
 export function CS2Schedule() {
 
-    // Mock Data for CS2
-    const liveEvents: ScheduleEvent[] = [
-        {
-            startTime: new Date(),
-            state: "inProgress",
-            type: "match",
-            league: { name: "IEM Katowice", slug: "iem-katowice" },
-            match: {
-                id: "cs2-1",
-                teams: [
-                    { code: "FAZE", image: "https://static.lolesports.com/teams/faze-logo.png", name: "FaZe Clan", result: { gameWins: 1 }, record: { wins: 3, losses: 1 } },
-                    { code: "G2", image: "https://static.lolesports.com/teams/g2-logo.png", name: "G2 Esports", result: { gameWins: 0 }, record: { wins: 2, losses: 2 } }
-                ],
-                strategy: { count: 3, type: "bestOf" }
-            }
-        }
-    ];
+    const [liveEvents, setLiveEvents] = useState<ScheduleEvent[]>([])
+    const [upcomingEvents, setUpcomingEvents] = useState<ScheduleEvent[]>([])
+    const [recentEvents, setRecentEvents] = useState<ScheduleEvent[]>([])
 
-    const upcomingEvents: ScheduleEvent[] = [
-        {
-            startTime: new Date(new Date().getTime() + 86400000), // Tomorrow
-            state: "unstarted",
-            type: "match",
-            league: { name: "BLAST Premier", slug: "blast-premier" },
-            match: {
-                id: "cs2-2",
-                teams: [
-                    { code: "NAVI", image: "https://static.lolesports.com/teams/navi-logo.png", name: "Natus Vincere", result: { gameWins: 0 }, record: { wins: 4, losses: 0 } },
-                    { code: "VIT", image: "https://static.lolesports.com/teams/vit-logo.png", name: "Team Vitality", result: { gameWins: 0 }, record: { wins: 1, losses: 3 } }
-                ],
-                strategy: { count: 3, type: "bestOf" }
-            }
-        }
-    ];
-
-    const recentEvents: ScheduleEvent[] = [
-         {
-            startTime: new Date(new Date().getTime() - 86400000), // Yesterday
-            state: "completed",
-            type: "match",
-            league: { name: "ESL Pro League", slug: "esl-pro-league" },
-            match: {
-                id: "cs2-3",
-                teams: [
-                    { code: "C9", image: "https://static.lolesports.com/teams/c9-logo.png", name: "Cloud9", result: { gameWins: 2, outcome: "win" }, record: { wins: 2, losses: 1 } },
-                    { code: "MOUZ", image: "https://static.lolesports.com/teams/mouz-logo.png", name: "MOUZ", result: { gameWins: 1, outcome: "loss" }, record: { wins: 1, losses: 2 } }
-                ],
-                strategy: { count: 3, type: "bestOf" }
-            }
-        }
-    ];
-
+    useEffect(() => {
+        getCS2Schedule().then(events => {
+            setLiveEvents(events.filter(e => e.state === "inProgress"))
+            setUpcomingEvents(events.filter(e => e.state === "unstarted"))
+            setRecentEvents(events.filter(e => e.state === "completed"))
+        })
+    }, [])
 
     let scheduledEvents = [
         {

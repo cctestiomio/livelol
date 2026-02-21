@@ -14,7 +14,7 @@ export function EventCard({ scheduleEvent }: Props) {
                 <h3>{scheduleEvent.league.name} - {scheduleEvent.blockName}</h3>
                 <h4>
                     <span>
-                        {new Date(scheduleEvent.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}
+                        {scheduleEvent.matchStateDetails ? scheduleEvent.matchStateDetails : new Date(scheduleEvent.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}
                     </span>
                 </h4>
                 <div className="live-game-card-content">
@@ -44,6 +44,13 @@ export function EventCard({ scheduleEvent }: Props) {
                                 {scheduleEvent.match.teams[0].result && scheduleEvent.match.teams[1].result ? `${scheduleEvent.match.teams[0].result.gameWins} - ${scheduleEvent.match.teams[1].result.gameWins}` : null}
                             </p>
                         </span>
+                        {(scheduleEvent.match.teams[0].score !== undefined && scheduleEvent.match.teams[1].score !== undefined) ? (
+                            <span>
+                                 <p style={{marginTop: '5px', fontSize: '1.2em', fontWeight: 'bold'}}>
+                                    {scheduleEvent.match.teams[0].score} - {scheduleEvent.match.teams[1].score}
+                                 </p>
+                            </span>
+                        ) : null}
                         <h1>VS</h1>
                     </div>
 

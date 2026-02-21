@@ -1,5 +1,5 @@
 import axios from "axios";
-import { mockEventDetails, mockGameMetadata, mockNBASchedule, mockValorantSchedule, mockWindowFrames } from "./MockData";
+import { mockEventDetails, mockGameMetadata, mockWindowFrames } from "./MockData";
 import { WindowFrame } from "../components/types/baseTypes";
 
 //export const ITEMS_URL = "https://ddragon.leagueoflegends.com/cdn/14.3.1/img/item/"
@@ -35,17 +35,11 @@ export function getScheduleResponse() {
         headers: {
             "x-api-key": API_KEY,
         },
-    }).then(response => {
-        if (response.data && response.data.data && response.data.data.schedule && response.data.data.schedule.events) {
-            response.data.data.schedule.events.push(...mockValorantSchedule);
-            response.data.data.schedule.events.push(...mockNBASchedule);
-        }
-        return response;
     })
 }
 
 export function getWindowResponse(gameId: string, date?: string) {
-    if (gameId.startsWith("val-") || gameId.startsWith("nba-")) {
+    if (gameId.startsWith("val-") || gameId.startsWith("nba-") || gameId.startsWith("cs2-")) {
         const mockFrame = mockWindowFrames[gameId];
         if (mockFrame) {
             simulateLiveUpdate(mockFrame);
@@ -56,6 +50,7 @@ export function getWindowResponse(gameId: string, date?: string) {
                 }
             });
         }
+        return Promise.resolve(undefined);
     }
 
     return axios.get(`${API_URL_LIVE}/window/${gameId}`, {
@@ -80,7 +75,7 @@ export function getWindowResponse(gameId: string, date?: string) {
 }
 
 export function getGameDetailsResponse(gameId: string, date: string, lastFrameSuccess: boolean) {
-    if (gameId.startsWith("val-") || gameId.startsWith("nba-")) {
+    if (gameId.startsWith("val-") || gameId.startsWith("nba-") || gameId.startsWith("cs2-")) {
         return Promise.resolve({
             data: {
                 frames: []
@@ -122,7 +117,7 @@ export function getGameDetailsResponse(gameId: string, date: string, lastFrameSu
 }
 
 export function getEventDetailsResponse(gameId: string) {
-    if (gameId.startsWith("val-") || gameId.startsWith("nba-")) {
+    if (gameId.startsWith("val-") || gameId.startsWith("nba-") || gameId.startsWith("cs2-")) {
         const mockEvent = mockEventDetails[gameId];
         if (mockEvent) {
             return Promise.resolve({
@@ -133,6 +128,35 @@ export function getEventDetailsResponse(gameId: string) {
                 }
             });
         }
+        // Return a basic event details structure for unknown real matches to avoid crashes
+        return Promise.resolve({
+            data: {
+                data: {
+                    event: {
+                        id: gameId,
+                        type: "match",
+                        league: { name: "Details Not Available", slug: "unknown" },
+                        tournament: { id: "unknown" },
+                        match: {
+                            strategy: { count: 1 },
+                            teams: [
+                                { id: "1", code: "TBD", name: "Team 1", image: "", result: { gameWins: 0 } },
+                                { id: "2", code: "TBD", name: "Team 2", image: "", result: { gameWins: 0 } }
+                            ],
+                            games: [
+                                {
+                                    id: gameId,
+                                    number: 1,
+                                    state: "inProgress",
+                                    teams: [{ id: "1", side: "blue" }, { id: "2", side: "red" }],
+                                    vods: []
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        });
     }
     return axios.get(`${API_URL_PERSISTED}/getEventDetails`, {
         params: {
