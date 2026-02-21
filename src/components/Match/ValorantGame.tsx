@@ -12,6 +12,11 @@ type Props = {
 export function ValorantGame({ eventDetails, scheduleEvent }: Props) {
     const team1 = eventDetails.match.teams[0];
     const team2 = eventDetails.match.teams[1];
+
+    if (!team1 || !team2) {
+        return <div>Team data missing</div>;
+    }
+
     const sportData = scheduleEvent.sportSpecificData || {};
 
     // Map scores if available (mocked for now in most cases)

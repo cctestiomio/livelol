@@ -12,6 +12,11 @@ type Props = {
 export function NBAGame({ eventDetails, scheduleEvent }: Props) {
     const homeTeam = eventDetails.match.teams[1];
     const awayTeam = eventDetails.match.teams[0];
+
+    if (!homeTeam || !awayTeam) {
+        return <div>Team data missing</div>;
+    }
+
     const sportData = scheduleEvent.sportSpecificData || {};
 
     // Default to empty arrays if data missing
@@ -19,11 +24,6 @@ export function NBAGame({ eventDetails, scheduleEvent }: Props) {
     const awayLinescores = sportData.awayLinescores || [];
     const clock = sportData.clock || "";
     const period = sportData.period || 0;
-
-    const getPeriodName = (p: number) => {
-        if (p <= 4) return `Q${p}`;
-        return `OT${p - 4}`;
-    };
 
     // Calculate totals from linescores if score is not updated or to verify
     const homeTotal = homeLinescores.reduce((a: number, b: number) => a + b, 0);

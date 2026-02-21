@@ -12,6 +12,11 @@ type Props = {
 export function CS2Game({ eventDetails, scheduleEvent }: Props) {
     const team1 = eventDetails.match.teams[0];
     const team2 = eventDetails.match.teams[1];
+
+    if (!team1 || !team2) {
+        return <div>Team data missing</div>;
+    }
+
     const sportData = scheduleEvent.sportSpecificData || {};
 
     // Map scores from API mock
