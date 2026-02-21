@@ -102,7 +102,9 @@ export function Match({ match }: any) {
                                          code: t.code,
                                          name: t.name,
                                          image: t.image,
-                                         result: t.result
+                                         result: t.result,
+                                         record: t.record,
+                                         score: t.score
                                      })),
                                      games: [{
                                          id: "mock-game",
@@ -553,6 +555,11 @@ export function Match({ match }: any) {
     }
 
     if (isMockMatch && eventDetails && lastWindowFrame && scheduleEvent) {
+        if (!eventDetails.match || !eventDetails.match.teams || eventDetails.match.teams.length < 2) {
+             console.error("Mock match data incomplete:", { eventDetails });
+             return <div className="loading-game-container">Error loading match data.</div>;
+        }
+
         if (matchId.startsWith('nba-')) {
             return (
                 <div className='match-container'>
