@@ -155,6 +155,7 @@ export interface ScheduleEvent {
     state: "completed" | "unstarted" | "inProgress";
     type: "match" | "show";
     matchStateDetails?: string; // e.g. "Q4 10:00", "Map 2 - Round 12"
+    sportSpecificData?: any;
 }
 
 export interface ScheduleMatch {
@@ -225,6 +226,7 @@ export interface Team {
     name: string;
     result: Result;
     id: string;
+    record?: Record;
 }
 
 export interface TeamMetadata {

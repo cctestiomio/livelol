@@ -4,34 +4,38 @@ import { ScheduleEvent, ScheduleTeam } from "../components/types/baseTypes";
 // This function returns a simulated list of matches for demonstration.
 
 export function getCS2Schedule(): Promise<ScheduleEvent[]> {
+    // Use a fixed date for mock data consistency across reloads/navigates
+    // Or at least floor it to the hour to keep it stable for a while
+    // Better yet, just use a static date since it's mock
     const now = new Date();
+    const fixedNow = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0); // stable for the hour
 
     const events: ScheduleEvent[] = [
         // Live Match
         createMatch("IEM Katowice 2026", "Group A", "Vitality", "FaZe", "VIT", "FAZE",
             "https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Team_Vitality_logo.svg/200px-Team_Vitality_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Faze_Clan.svg/200px-Faze_Clan.svg.png",
-            1, 1, "inProgress", new Date(now.getTime() - 1000 * 60 * 45), // Started 45 mins ago
+            1, 1, "inProgress", new Date(fixedNow.getTime() - 1000 * 60 * 45), // Started 45 mins ago
             "Map 3 - Round 12", 7, 5), // 7-5 score in current map
 
         // Upcoming
         createMatch("IEM Katowice 2026", "Group B", "G2", "NAVI", "G2", "NAVI",
             "https://upload.wikimedia.org/wikipedia/en/thumb/1/12/G2_Esports_logo.svg/200px-G2_Esports_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/NaVi_logo.svg/200px-NaVi_logo.svg.png",
-            0, 0, "unstarted", new Date(now.getTime() + 1000 * 60 * 60 * 2), // In 2 hours
+            0, 0, "unstarted", new Date(fixedNow.getTime() + 1000 * 60 * 60 * 2), // In 2 hours
             ""),
 
         createMatch("IEM Katowice 2026", "Group A", "Spirit", "MOUZ", "TS", "MOUZ",
             "https://upload.wikimedia.org/wikipedia/en/thumb/c/ce/Team_Spirit_logo.svg/200px-Team_Spirit_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/Mouz_logo.svg/200px-Mouz_logo.svg.png",
-            0, 0, "unstarted", new Date(now.getTime() + 1000 * 60 * 60 * 5), // In 5 hours
+            0, 0, "unstarted", new Date(fixedNow.getTime() + 1000 * 60 * 60 * 5), // In 5 hours
             ""),
 
         // Completed
         createMatch("IEM Katowice 2026", "Group B", "Cloud9", "Virtus.pro", "C9", "VP",
             "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Cloud9_logo.svg/200px-Cloud9_logo.svg.png",
             "https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Virtus.pro_logo.svg/200px-Virtus.pro_logo.svg.png",
-            2, 0, "completed", new Date(now.getTime() - 1000 * 60 * 60 * 5), // 5 hours ago
+            2, 0, "completed", new Date(fixedNow.getTime() - 1000 * 60 * 60 * 5), // 5 hours ago
             "Final"),
     ];
 
@@ -94,6 +98,13 @@ function createMatch(
         startTime: startTime,
         state: state,
         type: "match",
-        matchStateDetails: details
+        matchStateDetails: details,
+        sportSpecificData: {
+            maps: [
+                { name: "Nuke", score: { team1: 13, team2: 11 } },
+                { name: "Mirage", score: { team1: 8, team2: 13 } },
+                { name: "Inferno", score: { team1: 7, team2: 5 } }
+            ]
+        }
     };
 }
