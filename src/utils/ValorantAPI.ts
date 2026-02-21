@@ -86,3 +86,4 @@ function mapVLRMatchToScheduleEvent(match: any): ScheduleEvent | null {
         matchStateDetails: matchStateDetails
     };
 }
+
