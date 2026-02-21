@@ -1,7 +1,9 @@
 import { ScheduleEvent, EventDetails, WindowFrame, GameMetadata } from "../components/types/baseTypes";
 
 export const MOCK_VALORANT_MATCH_ID = "val-1";
+export const MOCK_VALORANT_MATCH_ID_LIVE_2 = "val-live-2";
 export const MOCK_NBA_MATCH_ID = "nba-1";
+export const MOCK_NBA_MATCH_ID_LIVE_2 = "nba-live-2";
 
 export const mockValorantSchedule: ScheduleEvent[] = [
     {
@@ -14,7 +16,21 @@ export const mockValorantSchedule: ScheduleEvent[] = [
             strategy: { count: 3, type: "bestOf" },
             teams: [
                 { code: "SEN", image: "https://static.lolesports.com/teams/sen-logo.png", name: "Sentinels", result: { gameWins: 1 }, record: { wins: 3, losses: 1 } },
-                { code: "100T", image: "https://static.lolesports.com/teams/100t-logo.png", name: "100 Thieves", result: { gameWins: 0 }, record: { wins: 2, losses: 2 } }
+                { code: "100T", image: "https://static.lolesports.com/teams/100t-logo.png", name: "100 Thieves", result: { gameWins: 1 }, record: { wins: 2, losses: 2 } }
+            ]
+        }
+    },
+    {
+        startTime: new Date(),
+        state: "inProgress",
+        type: "match",
+        league: { name: "VCT Americas", slug: "valorant" },
+        match: {
+            id: MOCK_VALORANT_MATCH_ID_LIVE_2,
+            strategy: { count: 3, type: "bestOf" },
+            teams: [
+                { code: "LOUD", image: "https://static.lolesports.com/teams/100t-logo.png", name: "LOUD", result: { gameWins: 0 }, record: { wins: 4, losses: 0 } },
+                { code: "FUR", image: "https://static.lolesports.com/teams/furia-logo.png", name: "FURIA", result: { gameWins: 0 }, record: { wins: 1, losses: 3 } }
             ]
         }
     },
@@ -64,6 +80,20 @@ export const mockNBASchedule: ScheduleEvent[] = [
         }
     },
     {
+        startTime: new Date(),
+        state: "inProgress",
+        type: "match",
+        league: { name: "NBA", slug: "nba" },
+        match: {
+            id: MOCK_NBA_MATCH_ID_LIVE_2,
+            strategy: { count: 1, type: "bestOf" },
+            teams: [
+                { code: "MIA", image: "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg", name: "Heat", result: { gameWins: 0 }, record: { wins: 28, losses: 17 } },
+                { code: "NYK", image: "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg", name: "Knicks", result: { gameWins: 0 }, record: { wins: 29, losses: 16 } }
+            ]
+        }
+    },
+    {
         startTime: new Date(new Date().getTime() + 7200000),
         state: "unstarted",
         type: "match",
@@ -89,12 +119,29 @@ export const mockEventDetails: { [key: string]: EventDetails } = {
             strategy: { count: 3 },
             teams: [
                 { id: "1", code: "SEN", name: "Sentinels", image: "https://static.lolesports.com/teams/sen-logo.png", result: { gameWins: 1 } },
-                { id: "2", code: "100T", name: "100 Thieves", image: "https://static.lolesports.com/teams/100t-logo.png", result: { gameWins: 0 } }
+                { id: "2", code: "100T", name: "100 Thieves", image: "https://static.lolesports.com/teams/100t-logo.png", result: { gameWins: 1 } }
             ],
             games: [
                 { id: "val-g1", number: 1, state: "completed", teams: [{ id: "1", side: "blue" }, { id: "2", side: "red" }], vods: [] },
-                { id: "val-g2", number: 2, state: "inProgress", teams: [{ id: "2", side: "blue" }, { id: "1", side: "red" }], vods: [] },
-                { id: "val-g3", number: 3, state: "unstarted", teams: [{ id: "1", side: "blue" }, { id: "2", side: "red" }], vods: [] }
+                { id: "val-g2", number: 2, state: "completed", teams: [{ id: "2", side: "blue" }, { id: "1", side: "red" }], vods: [] },
+                { id: "val-g3", number: 3, state: "inProgress", teams: [{ id: "1", side: "blue" }, { id: "2", side: "red" }], vods: [] }
+            ]
+        },
+        streams: []
+    },
+    [MOCK_VALORANT_MATCH_ID_LIVE_2]: {
+        id: MOCK_VALORANT_MATCH_ID_LIVE_2,
+        type: "match",
+        league: { name: "VCT Americas", slug: "valorant", id: "val-league", image: "" },
+        tournament: { id: "val-tourney" },
+        match: {
+            strategy: { count: 3 },
+            teams: [
+                { id: "3", code: "LOUD", name: "LOUD", image: "https://static.lolesports.com/teams/100t-logo.png", result: { gameWins: 0 } },
+                { id: "4", code: "FUR", name: "FURIA", image: "https://static.lolesports.com/teams/furia-logo.png", result: { gameWins: 0 } }
+            ],
+            games: [
+                { id: "val-l2-g1", number: 1, state: "inProgress", teams: [{ id: "3", side: "blue" }, { id: "4", side: "red" }], vods: [] }
             ]
         },
         streams: []
@@ -115,15 +162,35 @@ export const mockEventDetails: { [key: string]: EventDetails } = {
             ]
         },
         streams: []
+    },
+    [MOCK_NBA_MATCH_ID_LIVE_2]: {
+        id: MOCK_NBA_MATCH_ID_LIVE_2,
+        type: "match",
+        league: { name: "NBA", slug: "nba", id: "nba-league", image: "" },
+        tournament: { id: "nba-tourney" },
+        match: {
+            strategy: { count: 1 },
+            teams: [
+                { id: "5", code: "MIA", name: "Heat", image: "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg", result: { gameWins: 0 } },
+                { id: "6", code: "NYK", name: "Knicks", image: "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg", result: { gameWins: 0 } }
+            ],
+            games: [
+                { id: "nba-l2-g1", number: 1, state: "inProgress", teams: [{ id: "5", side: "blue" }, { id: "6", side: "red" }], vods: [] }
+            ]
+        },
+        streams: []
     }
 };
 
 export const mockWindowFrames: { [key: string]: WindowFrame } = {
-    [MOCK_VALORANT_MATCH_ID]: {
+    // Valorant Match 1 - Game 3
+    "val-g3": {
         gameState: "in_game",
         rfc460Timestamp: new Date().toISOString(),
+        period: "Map 3",
+        gameTime: "Round 23",
         blueTeam: {
-            totalKills: 13, // Valorant rounds?
+            totalKills: 13,
             totalGold: 0,
             inhibitors: 0,
             towers: 0,
@@ -141,11 +208,39 @@ export const mockWindowFrames: { [key: string]: WindowFrame } = {
             participants: []
         }
     },
-    [MOCK_NBA_MATCH_ID]: {
+    // Valorant Match 2 - Game 1
+    "val-l2-g1": {
         gameState: "in_game",
         rfc460Timestamp: new Date().toISOString(),
+        period: "Map 1",
+        gameTime: "Round 5",
         blueTeam: {
-            totalKills: 105, // NBA points
+            totalKills: 2,
+            totalGold: 0,
+            inhibitors: 0,
+            towers: 0,
+            barons: 0,
+            dragons: [],
+            participants: []
+        },
+        redTeam: {
+            totalKills: 3,
+            totalGold: 0,
+            inhibitors: 0,
+            towers: 0,
+            barons: 0,
+            dragons: [],
+            participants: []
+        }
+    },
+    // NBA Match 1 - Game 1
+    "nba-g1": {
+        gameState: "in_game",
+        rfc460Timestamp: new Date().toISOString(),
+        period: "Q4",
+        gameTime: "02:30",
+        blueTeam: {
+            totalKills: 105,
             totalGold: 0,
             inhibitors: 0,
             towers: 0,
@@ -155,6 +250,31 @@ export const mockWindowFrames: { [key: string]: WindowFrame } = {
         },
         redTeam: {
             totalKills: 98,
+            totalGold: 0,
+            inhibitors: 0,
+            towers: 0,
+            barons: 0,
+            dragons: [],
+            participants: []
+        }
+    },
+    // NBA Match 2 - Game 1
+    "nba-l2-g1": {
+        gameState: "in_game",
+        rfc460Timestamp: new Date().toISOString(),
+        period: "Q2",
+        gameTime: "08:15",
+        blueTeam: {
+            totalKills: 45,
+            totalGold: 0,
+            inhibitors: 0,
+            towers: 0,
+            barons: 0,
+            dragons: [],
+            participants: []
+        },
+        redTeam: {
+            totalKills: 42,
             totalGold: 0,
             inhibitors: 0,
             towers: 0,

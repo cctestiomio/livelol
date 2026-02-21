@@ -502,6 +502,16 @@ export function Match({ match }: any) {
         )
     }
 
+    if (isMockMatch) {
+        return (
+            <div className="loading-game-container">
+                <div>
+                    <img className="loading-game-image" alt="game loading" src={Loading} />
+                </div>
+            </div>
+        )
+    }
+
     if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && currentGameOutcome !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined && runes !== undefined) {
         return (
             <div className='match-container'>

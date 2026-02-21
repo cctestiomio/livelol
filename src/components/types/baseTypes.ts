@@ -255,6 +255,9 @@ export interface WindowFrame {
     gameState: "in_game" | "finished";
     rfc460Timestamp: string;
     redTeam: TeamStats;
+    // For non-LoL games
+    period?: string; // e.g., "Q3", "1st Half", "Map 2"
+    gameTime?: string; // e.g., "05:40"
 }
 
 export interface WindowParticipant {
