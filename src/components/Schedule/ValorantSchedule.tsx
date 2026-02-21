@@ -1,14 +1,22 @@
 import './styles/scheduleStyle.css'
 import { EventCard } from "./EventCard";
 import { ScheduleEvent } from "../types/baseTypes";
-import { mockValorantSchedule } from "../../utils/MockData";
+import { getValorantSchedule } from "../../utils/ValorantAPI";
+import { useEffect, useState } from "react";
 
 export function ValorantSchedule() {
 
-    const liveEvents = mockValorantSchedule.filter(e => e.state === "inProgress");
-    const upcomingEvents = mockValorantSchedule.filter(e => e.state === "unstarted");
-    const recentEvents = mockValorantSchedule.filter(e => e.state === "completed");
+    const [liveEvents, setLiveEvents] = useState<ScheduleEvent[]>([])
+    const [upcomingEvents, setUpcomingEvents] = useState<ScheduleEvent[]>([])
+    const [recentEvents, setRecentEvents] = useState<ScheduleEvent[]>([])
 
+    useEffect(() => {
+        getValorantSchedule().then(events => {
+            setLiveEvents(events.filter(e => e.state === "inProgress"))
+            setUpcomingEvents(events.filter(e => e.state === "unstarted"))
+            setRecentEvents(events.filter(e => e.state === "completed"))
+        })
+    }, [])
 
     let scheduledEvents = [
         {

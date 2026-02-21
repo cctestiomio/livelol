@@ -24,6 +24,7 @@ export interface Event {
     startTime: Date;
     state: "completed" | "unstarted" | "inProgress";
     type: "match" | "show";
+    matchStateDetails?: string; // e.g. "Q4 10:00", "Map 2 - Round 12"
 }
 
 export interface EventDetails {
@@ -153,6 +154,7 @@ export interface ScheduleEvent {
     startTime: Date;
     state: "completed" | "unstarted" | "inProgress";
     type: "match" | "show";
+    matchStateDetails?: string; // e.g. "Q4 10:00", "Map 2 - Round 12"
 }
 
 export interface ScheduleMatch {
@@ -167,6 +169,7 @@ export interface ScheduleTeam {
     name: string;
     record?: Record;
     result: Result;
+    score?: number; // Added for live score (points/rounds)
 }
 
 export interface Section {
