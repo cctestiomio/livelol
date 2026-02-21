@@ -1,4 +1,8 @@
-﻿import './styles/scheduleStyle.css'
+# a.ps1
+$filePath = "src\components\Schedule\EventsSchedule.tsx"
+
+$newContent = @'
+import './styles/scheduleStyle.css'
 
 import { getScheduleResponse } from "../../utils/LoLEsportsAPI";
 import { EventCard } from "./EventCard";
@@ -152,4 +156,12 @@ function filterByNext7Days(scheduleEvent: ScheduleEvent) {
     } else {
         return false;
     }
+}
+'@
+
+if (Test-Path $filePath) {
+    Set-Content -Path $filePath -Value $newContent -Encoding UTF8
+    Write-Host "Successfully updated $filePath with the sub-second refresh logic." -ForegroundColor Green
+} else {
+    Write-Host "Error: Cannot find $filePath. Make sure you are running this script from the root of the project." -ForegroundColor Red
 }
