@@ -1,60 +1,13 @@
 import './styles/scheduleStyle.css'
 import { EventCard } from "./EventCard";
 import { ScheduleEvent } from "../types/baseTypes";
+import { mockNBASchedule } from "../../utils/MockData";
 
 export function NBASchedule() {
 
-    // Mock Data for NBA
-    const liveEvents: ScheduleEvent[] = [
-        {
-            startTime: new Date(),
-            state: "inProgress",
-            type: "match",
-            league: { name: "NBA Regular Season", slug: "nba" },
-            match: {
-                id: "nba-1",
-                teams: [
-                    { code: "LAL", image: "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg", name: "Lakers", result: { gameWins: 105 }, record: { wins: 30, losses: 15 } },
-                    { code: "BOS", image: "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg", name: "Celtics", result: { gameWins: 98 }, record: { wins: 35, losses: 10 } }
-                ],
-                strategy: { count: 1, type: "bestOf" }
-            }
-        }
-    ];
-
-    const upcomingEvents: ScheduleEvent[] = [
-        {
-            startTime: new Date(new Date().getTime() + 86400000), // Tomorrow
-            state: "unstarted",
-            type: "match",
-            league: { name: "NBA Regular Season", slug: "nba" },
-            match: {
-                id: "nba-2",
-                teams: [
-                    { code: "GSW", image: "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg", name: "Warriors", result: { gameWins: 0 }, record: { wins: 25, losses: 20 } },
-                    { code: "PHX", image: "https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg", name: "Suns", result: { gameWins: 0 }, record: { wins: 28, losses: 18 } }
-                ],
-                strategy: { count: 1, type: "bestOf" }
-            }
-        }
-    ];
-
-    const recentEvents: ScheduleEvent[] = [
-         {
-            startTime: new Date(new Date().getTime() - 86400000), // Yesterday
-            state: "completed",
-            type: "match",
-            league: { name: "NBA Regular Season", slug: "nba" },
-            match: {
-                id: "nba-3",
-                teams: [
-                    { code: "MIA", image: "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg", name: "Heat", result: { gameWins: 110, outcome: "win" }, record: { wins: 22, losses: 22 } },
-                    { code: "NYK", image: "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg", name: "Knicks", result: { gameWins: 102, outcome: "loss" }, record: { wins: 26, losses: 19 } }
-                ],
-                strategy: { count: 1, type: "bestOf" }
-            }
-        }
-    ];
+    const liveEvents = mockNBASchedule.filter(e => e.state === "inProgress");
+    const upcomingEvents = mockNBASchedule.filter(e => e.state === "unstarted");
+    const recentEvents = mockNBASchedule.filter(e => e.state === "completed");
 
 
     let scheduledEvents = [

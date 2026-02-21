@@ -1,4 +1,4 @@
-# 📊 Live LoL Esports - Forked from [Aureom](https://github.com/Aureom/live-lol-esports)
+# 📊 Live LoL Esports
 
 # 🔑 Key Differences
 * Translated to English 🤠

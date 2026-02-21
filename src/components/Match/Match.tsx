@@ -23,6 +23,7 @@ import { TwitchEmbed, TwitchEmbedLayout } from 'twitch-player';
 import { GameDetails } from './GameDetails';
 import { StreamToggler } from '../Navbar/StreamToggler';
 import { DisabledGame } from './DisabledGame';
+import { SimpleMatch } from './SimpleMatch';
 
 
 export function Match({ match }: any) {
@@ -46,6 +47,7 @@ export function Match({ match }: any) {
     const streamEnabled = streamData ? streamData === `unmute` : false
 
     const matchId = match.params.gameid;
+    const isMockMatch = matchId.startsWith('val-') || matchId.startsWith('nba-');
     let matchEventDetails = eventDetails
     let currentGameIndex = 1
     let lastFrameSuccess = false
@@ -199,6 +201,7 @@ export function Match({ match }: any) {
         }
 
         function getResults(eventDetails: EventDetails) {
+            if (isMockMatch) return;
             if (eventDetails === undefined) return;
             getStandingsResponse(eventDetails.tournament.id).then(response => {
                 let standings: Standing[] = response.data.data.standings
@@ -225,12 +228,20 @@ export function Match({ match }: any) {
         }
 
         function getItems(metadata: GameMetadata) {
+            if (isMockMatch) {
+                setItems([]);
+                return;
+            }
             const formattedPatchVersion = getFormattedPatchVersion(metadata.patchVersion)
             getDataDragonResponse(ITEMS_JSON_URL, formattedPatchVersion).then(response => {
                 setItems(response.data.data)
             })
         }
         function getRunes(metadata: GameMetadata) {
+            if (isMockMatch) {
+                setRunes([]);
+                return;
+            }
             const formattedPatchVersion = getFormattedPatchVersion(metadata.patchVersion)
             getDataDragonResponse(RUNES_JSON_URL, formattedPatchVersion).then(response => {
                 setRunes(response.data)
@@ -481,6 +492,14 @@ export function Match({ match }: any) {
                     `<iframe src="https://play.afreecatv.com/${parameter}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
             }
         }
+    }
+
+    if (isMockMatch && eventDetails && lastWindowFrame && scheduleEvent) {
+        return (
+            <div className='match-container'>
+                <SimpleMatch eventDetails={eventDetails} lastWindowFrame={lastWindowFrame} scheduleEvent={scheduleEvent} />
+            </div>
+        )
     }
 
     if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && currentGameOutcome !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined && runes !== undefined) {
