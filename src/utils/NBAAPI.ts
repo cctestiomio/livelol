@@ -85,6 +85,9 @@ function mapESPNEventToScheduleEvent(event: any): ScheduleEvent | null {
         matchStateDetails =  new Date(event.date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     }
 
+    const homeLinescores = homeTeamData.linescores?.map((l: any) => l.value) || [];
+    const awayLinescores = awayTeamData.linescores?.map((l: any) => l.value) || [];
+
     return {
         league: {
             name: "NBA",
@@ -98,6 +101,12 @@ function mapESPNEventToScheduleEvent(event: any): ScheduleEvent | null {
         startTime: new Date(event.date),
         state: state,
         type: "match",
-        matchStateDetails: matchStateDetails
+        matchStateDetails: matchStateDetails,
+        sportSpecificData: {
+            clock: competition.status.displayClock,
+            period: competition.status.period,
+            homeLinescores: homeLinescores,
+            awayLinescores: awayLinescores,
+        }
     };
 }

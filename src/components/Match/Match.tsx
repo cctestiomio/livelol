@@ -24,6 +24,9 @@ import { GameDetails } from './GameDetails';
 import { StreamToggler } from '../Navbar/StreamToggler';
 import { DisabledGame } from './DisabledGame';
 import { SimpleMatch } from './SimpleMatch';
+import { NBAGame } from './NBAGame';
+import { ValorantGame } from './ValorantGame';
+import { CS2Game } from './CS2Game';
 
 import { getNBASchedule } from "../../utils/NBAAPI";
 import { getValorantSchedule } from "../../utils/ValorantAPI";
@@ -60,6 +63,7 @@ export function Match({ match }: any) {
         getEventDetails(getInitialGameIndex());
 
         const windowIntervalID = setInterval(() => {
+            if (isMockMatch) return
             if (!matchEventDetails) return
             let newGameIndex = getGameIndex(matchEventDetails)
             let gameId = matchEventDetails.match.games[newGameIndex - 1].id
@@ -100,7 +104,13 @@ export function Match({ match }: any) {
                                          image: t.image,
                                          result: t.result
                                      })),
-                                     games: []
+                                     games: [{
+                                         id: "mock-game",
+                                         number: 1,
+                                         state: "inProgress",
+                                         teams: [],
+                                         vods: []
+                                     }]
                                  },
                                  tournament: { id: "unknown" },
                                  type: "match"
@@ -451,6 +461,7 @@ export function Match({ match }: any) {
 
     function getStreamDropdown(eventDetails: EventDetails) {
         let streamsOrVods: Array<ExtendedVod> = []
+        if (!eventDetails.match.games || !eventDetails.match.games.length) return null;
         let vods = eventDetails.match.games[gameIndex ? gameIndex - 1 : 0].vods
 
         if (vods.length) {
@@ -542,6 +553,27 @@ export function Match({ match }: any) {
     }
 
     if (isMockMatch && eventDetails && lastWindowFrame && scheduleEvent) {
+        if (matchId.startsWith('nba-')) {
+            return (
+                <div className='match-container'>
+                    <NBAGame eventDetails={eventDetails} scheduleEvent={scheduleEvent} />
+                </div>
+            )
+        }
+        if (matchId.startsWith('val-')) {
+            return (
+                <div className='match-container'>
+                    <ValorantGame eventDetails={eventDetails} scheduleEvent={scheduleEvent} />
+                </div>
+            )
+        }
+        if (matchId.startsWith('cs2-')) {
+            return (
+                <div className='match-container'>
+                    <CS2Game eventDetails={eventDetails} scheduleEvent={scheduleEvent} />
+                </div>
+            )
+        }
         return (
             <div className='match-container'>
                 <SimpleMatch eventDetails={eventDetails} lastWindowFrame={lastWindowFrame} scheduleEvent={scheduleEvent} />
@@ -563,7 +595,7 @@ export function Match({ match }: any) {
                 <DisabledGame eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} records={records} />
             </div>
         );
-    } else if (eventDetails !== undefined) {
+    } else if (eventDetails !== undefined && !isMockMatch) {
         document.title = `🟡 ${eventDetails.league.name} - ${eventDetails?.match.teams[0].name} vs. ${eventDetails?.match.teams[1].name}`;
         return (
             <div>
